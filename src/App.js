@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import FontAwesome from 'react-fontawesome';
 import * as d3dag from 'd3-dag';
-import Graph from './Graph';
+import Graph from './Graph/Graph';
 import { randomColor } from './utils';
 import FileUploader from './FileUploader/';
 import CPD from './CPD/'
 import Checkbox from '@material-ui/core/Checkbox';
 import { makeStyles } from '@material-ui/core/styles';
+import { findActiveTrails } from './Graph/GraphUtils'
 import './App.css';
 
 const dagStratify = d3dag.dagStratify();
@@ -76,6 +77,11 @@ function App() {
     const arcData = t.links().map(l => ({ points: l.data.points, color: colorDict[l.source.id], width: strengthDict[`${l.source.id}${l.target.id}`]})) 
     if (graph === undefined) {
       setGraph({nodes: nodes, nodeData: nodeData, arcs: arcData, width: width, height: height, cpds: data.cpds })
+    }
+    if (network.name === 'Alarm') {
+      const arcs = [...t.links()]
+      const nodes = [...dag.descendants().map(n => ({ id: n.id }))];
+      findActiveTrails(nodes, arcs, nodes[0], nodes[5], ['PRESS'])
     }
   }
 
