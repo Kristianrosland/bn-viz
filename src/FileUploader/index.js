@@ -18,32 +18,35 @@ const FileUploader = props => {
      */
     const onDrop = useCallback(acceptedFiles => {
         setStatus('parsing')
-        try {
-            const reader = new FileReader()
+        const reader = new FileReader()
 
-            reader.onabort = () => console.log('File reading of ' + acceptedFiles + ' aborted!')
-            reader.onerror = () => console.log('File reading of ' + acceptedFiles + ' failed!')
-            reader.onload = () => {
+        reader.onabort = () => console.log('File reading of ' + acceptedFiles + ' aborted!')
+        reader.onerror = () => console.log('File reading of ' + acceptedFiles + ' failed!')
+        reader.onload = () => {
+            try {
                 const binaryStr = reader.result
                 const graphObject = parseBIFToGraph(binaryStr);
                 props.callback(graphObject)
-            };
+            } catch (err) {
+                setError('Error parsing file: ' + err.message)
+                setStatus('ready');
+            }
+        };
 
-            acceptedFiles.forEach(file => reader.readAsBinaryString(file))
-        } catch(err) {
-            setError("Error parsing file:" + err.message)
-        }
+        acceptedFiles.forEach(file => reader.readAsBinaryString(file))
     }, [props]);
 
     /**
      * Using one of the default example files (asia, alarm, etc.)
      */
     const useDefaultFile = fileContent => {
+        setStatus('parsing')
         try {
             const graphObject = parseBIFToGraph(fileContent);
             props.callback(graphObject);
         } catch (err) {
             setError("Error parsing file: " + err.message)
+            setStatus('ready');
         }
     }
     
