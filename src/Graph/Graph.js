@@ -126,7 +126,7 @@ class Graph extends Component {
                 { activeTrailsInformation && <p className='help-text'> {
                     activeTrailsInformation.queryNodes.length < 2 
                         ? "Select two nodes"
-                        : "Click a node mark it as observed"
+                        : "Click on a node to mark it as observed"
                 } </p> }
                 
             </div>

@@ -20,7 +20,6 @@ const FileUploader = props => {
         reader.onload = () => {
             const binaryStr = reader.result
             const graphObject = parseBIFToGraph(binaryStr);
-            //TODO: Error handling
             props.callback(graphObject)
         };
 

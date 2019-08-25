@@ -21,7 +21,8 @@ function App() {
   const [ showArcStrengths, setShowArcStrengths ] = useState(false);
   const [ activeTrailsMode, setActiveTrailsMode ] = useState(false);
   const [ trashHovered, setTrashHovered ] = useState(false);
-  const [ activeTrailsInformation, setActiveTrailsInformation ] = useState(undefined)
+  const [ closeHovered, setCloseHovered ] = useState(false);
+  const [ activeTrailsInformation, setActiveTrailsInformation ] = useState(undefined);
 
   const calculateActivetrails = (q, e) => {
     const allTrails = findActiveTrails(graph.nodeData, graph.arcs, q[0], q[1], e).flat().map(({source, target})=>`${source}-${target}`)
@@ -63,7 +64,6 @@ function App() {
       });
     }
   }
-  
 
   const handleArcStrengthCheckboxClick = () => {
     setShowArcStrengths(!showArcStrengths)
@@ -135,18 +135,26 @@ function App() {
     }
   })()
 
-  const arcStrengthCheckbox = <Checkbox classes={{ root: classes.root, colorSecondary: classes.colorSecondary }} onChange={handleArcStrengthCheckboxClick} />
-  const activeTrailsCheckbox = <Checkbox classes={{ root: classes.root, colorSecondary: classes.colorSecondary }} onChange={handleActiveTrailsCheckboxClick} />
+  const arcStrengthCheckbox = <Checkbox classes={classes} onChange={handleArcStrengthCheckboxClick} />
+  const activeTrailsCheckbox = <Checkbox classes={classes} onChange={handleActiveTrailsCheckboxClick} />
 
   return (
-    <div className="App">
+    <>
+    <div className="only-mobile too-small">
+      Your screen is too small for this application
+    </div>
+    <div className="App hidden-mobile">
       <div className="left-pane" style={{ width: `${width}%`, transition: 'all 0.3s' }}>
         <div className="upper-left-pane">
-          { clickedNode && <FontAwesome className="close-icon" name="times-circle" onClick={() => closeSlideIn()}/> }
+          { clickedNode && <FontAwesome 
+                              className={`${closeHovered ? 'icon-hovered' : ''} close-icon`}
+                              name="times-circle" onClick={() => closeSlideIn()}
+                              onMouseEnter={() => setCloseHovered(true)}
+                              onMouseLeave={() => setCloseHovered(false)}/> }
           { networkName && <div className="network-name-container">
             <p className="network-name label">{ networkName }</p>
             <FontAwesome 
-              className={`${trashHovered ? 'trash-icon-hovered' : ''} trash-icon`} 
+              className={`${trashHovered ? 'icon-hovered' : ''} trash-icon`} 
               name="trash" onClick={() => trash()}
               onMouseEnter={() => setTrashHovered(true)}
               onMouseLeave={() => setTrashHovered(false)}
@@ -172,9 +180,8 @@ function App() {
                                     activeTrailsInformation={activeTrailsInformation}
                                   /> }
       </div>
-
-
     </div>
+    </>
   );
 }
 

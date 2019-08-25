@@ -59,18 +59,19 @@
   cursor: pointer;
 }
 
-.trash-icon-hovered {
-  color: white
-}
-
 .close-icon {
-  color: white;
+  color: #CCCCCC;
   position: absolute;
   right: 25px;
   top: 25px;
   cursor: pointer;
   font-size: 40px;
 }
+
+.icon-hovered {
+  color: white
+}
+
 
 .clickable {
   cursor: pointer;
@@ -86,4 +87,28 @@
   position: absolute;
   left: 15px;
   top: 0;
+}
+
+@media all and (max-width: 1000px) {
+  .hidden-mobile {
+    display: none;
+  }
+}
+
+@media all and (min-width: 1001px) {
+  div .only-mobile {
+    display: none;
+  }
+}
+
+.too-small {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-size: 2rem;
+  width: 100%;
+  height: 10rem;
+  padding: 0 5%;
+  box-sizing: border-box;
 }
