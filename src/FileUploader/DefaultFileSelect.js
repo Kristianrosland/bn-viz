@@ -30,7 +30,7 @@ const DefaultFileSelect = ({ callback }) => {
 
     return (
         <div className="default-file-select-wrapper">
-            <div className="example-networks-header">Example networks</div>
+            <div className="example-networks-header">..or use an example network</div>
             { availableNetworks.map(network => {
                 return (
                     <div className="example-network" key={network} onClick={() => openFile(network)}>
