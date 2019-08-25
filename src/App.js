@@ -19,6 +19,7 @@ function App() {
   const [ networkName, setNetworkName ] = useState(undefined);
   const [ cpd, setCpd ] = useState(undefined);
   const [ showArcStrengths, setShowArcStrengths ] = useState(false);
+  const [ hasAllArcStrengths, setHasAllArcStrengths ] = useState(false);
   const [ activeTrailsMode, setActiveTrailsMode ] = useState(false);
   const [ trashHovered, setTrashHovered ] = useState(false);
   const [ closeHovered, setCloseHovered ] = useState(false);
@@ -96,6 +97,8 @@ function App() {
     setNetworkName(undefined)
     setCpd(undefined)
     setShowArcStrengths(false)
+    setActiveTrailsInformation(undefined)
+    setActiveTrailsMode(false)
     setTrashHovered(false)
   }
 
@@ -114,9 +117,14 @@ function App() {
     const nodeData = dag.descendants().map((n, idx) => ({ id: n.id, x: n.x, y: n.y, color: randomColors[idx] }))
     
     const strengthDict = {}
-    for (let {from, to, strength} of data.arcStrengths) {
-        const width = 1.5 + 10*strength 
-        strengthDict[`${from}${to}`] = width
+    if (data.arcStrengths && data.arcStrengths.length === t.links().length) {
+      for (let {from, to, strength} of data.arcStrengths) {
+          const width = 1.5 + 10*strength
+          strengthDict[`${from}${to}`] = width
+      }
+
+      // If every arc has a strength, activate the "Show arc strength" checkbox
+      setHasAllArcStrengths((Object.keys(strengthDict).length === t.links().length));
     }
     const colorDict = {} 
     nodeData.forEach(n => colorDict[n.id] = n.color)
@@ -126,17 +134,20 @@ function App() {
     }
   }
 
-  const classes = makeStyles({
-    root: {
-      color: 'white'
-    }, 
+  const arcStrengthClasses = makeStyles({
+    colorSecondary: {
+      color: hasAllArcStrengths ? 'white !important' : 'gray !important'
+    }
+  })()
+
+  const activeTrailsClasses = makeStyles({
     colorSecondary: {
       color: 'white !important'
     }
   })()
 
-  const arcStrengthCheckbox = <Checkbox classes={classes} onChange={handleArcStrengthCheckboxClick} />
-  const activeTrailsCheckbox = <Checkbox classes={classes} onChange={handleActiveTrailsCheckboxClick} />
+  const arcStrengthCheckbox = <Checkbox disabled={!hasAllArcStrengths} classes={arcStrengthClasses} onChange={handleArcStrengthCheckboxClick} />
+  const activeTrailsCheckbox = <Checkbox classes={activeTrailsClasses} onChange={handleActiveTrailsCheckboxClick} />
 
   return (
     <>
@@ -160,7 +171,11 @@ function App() {
               onMouseLeave={() => setTrashHovered(false)}
               />
           </div> }
-          { networkName && <p className="arc-strength-checkbox-title"> Show arc strength {arcStrengthCheckbox}</p> }
+          { networkName && 
+            <p className={`${!hasAllArcStrengths ? 'disabled tool' : ''} arc-strength-checkbox-title`} data-tip={'You must add arc strengths to your BIF-file'}> 
+                Show arc strength {arcStrengthCheckbox}
+            </p> 
+          }
           { networkName && <p className="arc-strength-checkbox-title"> See active trails {activeTrailsCheckbox}</p> }
         </div>
         <div className="lower-left-pane">

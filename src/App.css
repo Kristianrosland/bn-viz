@@ -112,3 +112,8 @@
   padding: 0 5%;
   box-sizing: border-box;
 }
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}

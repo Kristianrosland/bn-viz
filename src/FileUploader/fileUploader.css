@@ -31,3 +31,98 @@
 .cursor-wait {
     cursor: wait;
 }
+
+.default-file-select-wrapper {
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.example-network {
+    color: lightblue;
+    border: 1px solid lightblue;
+    border-radius: 1rem;
+
+    width: 15rem;
+    padding: 0.75rem 1.25rem;
+    margin-bottom: 4px;
+    
+    text-transform: capitalize;
+    cursor: pointer;
+}
+
+.example-network:hover {
+    background-color: lightblue;
+    color: white;
+    font-weight: bold;
+}
+
+.example-networks-header {
+    color: lightblue;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.disabled {
+    color: gray !important;
+}
+
+/*== start of code for tooltips ==*/
+.tool {
+    cursor: help;
+    position: relative;
+}
+
+
+/*== common styles for both parts of tool tip ==*/
+.tool::before,
+.tool::after {
+    left: 50%;
+    opacity: 0;
+    position: absolute;
+    z-index: -100;
+}
+
+.tool:hover::before,
+.tool:focus::before,
+.tool:hover::after,
+.tool:focus::after {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    z-index: 100; 
+}
+
+/*== speech bubble ==*/
+.tool::after {
+    background: white;
+    border-radius: .25em;
+    bottom: 100%;
+    color: gray;
+    content: attr(data-tip);
+    margin-left: -6em;
+    padding: 0.30em 0.5em;
+    transition: all .65s cubic-bezier(.84,-0.18,.31,1.26) .2s;
+    transform:  scale(.6) translateY(50%);  
+    width: 12em;
+    font-size: 1rem;
+}
+
+.tool:hover::after,
+.tool:focus::after  {
+    transition: all .65s cubic-bezier(.84,-0.18,.31,1.26);
+}
+
+@media (max-width: 760px) {
+  .tool::after { 
+        font-size: .75em;
+        margin-left: -5em;
+        width: 10em; 
+  }
+}
+
+
+
+
