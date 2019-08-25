@@ -32,14 +32,14 @@ const tokenize = str => {
 const parseSymbol = (tokens, s) => {
     let [token] = tokens.splice(0, 1)
     if (token !== s)
-        throw new Error(`Expected token ${s}, found ${token}`)
+        throw new Error(`Expected token <${s}>, got <${token}>`)
     return tokens
 }
 
 const parseProperty = tokens => {
     const [propName, propValue, semiColon] = tokens.splice(0,3);
 
-    if (semiColon !== ';') throw new Error(`Expected semi-colon after property declaration, got ${semiColon}.`)
+    if (semiColon !== ';') throw new Error(`Expected semi-colon after property declaration, got <${semiColon}>.`)
 
     return {rest: tokens, name: propName, value: propValue}
 }
@@ -48,7 +48,7 @@ const parseArcStrength = tokens => {
     tokens = parseSymbol(tokens, "arc_strength")
     const [ from, to, strength, semiColon ] = tokens.splice(0,4)
 
-    if (semiColon !== ';') throw new Error(`Expected semi-colon after arc strength, got ${semiColon}.`)
+    if (semiColon !== ';') throw new Error(`Expected semi-colon after arc strength, got <${semiColon}>.`)
 
     return { rest: tokens, from, to, strength }
 }
@@ -220,7 +220,7 @@ export const parseBIFToGraph = bifString => {
                 tokens = parseCPDBlock(tokens, resultObject);
                 break;
             default:
-                throw new Error(`Parsing error: Expected a block type (network|variable|probability), got ${tokens[0]}`)
+                throw new Error(`Parsing error: Expected a block type (network|variable|probability), got <${tokens[0]}>`)
         }
     }
 

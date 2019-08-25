@@ -6,39 +6,45 @@ import ScaleLoader from 'react-spinners/ScaleLoader';
 import DefaultFileSelect from './DefaultFileSelect';
 import './fileUploader.css'
 
-
-
 const FileUploader = props => {
     
-    /** To keep track of loading state of the upload component */
+    /** To keep track of the state of the upload component */
     const [ status, setStatus ] = useState('ready');
+    const [ error, setError ] = useState(null);
 
     /**
      * When the user drops or opens a file from their own computer.
      * Parses the content and sends a callback to the App-component
      */
     const onDrop = useCallback(acceptedFiles => {
-        console.log(acceptedFiles[0])
         setStatus('parsing')
-        const reader = new FileReader()
+        try {
+            const reader = new FileReader()
 
-        reader.onabort = () => console.log('File reading of ' + acceptedFiles + ' aborted!')
-        reader.onerror = () => console.log('File reading of ' + acceptedFiles + ' failed!')
-        reader.onload = () => {
-            const binaryStr = reader.result
-            const graphObject = parseBIFToGraph(binaryStr);
-            props.callback(graphObject)
-        };
+            reader.onabort = () => console.log('File reading of ' + acceptedFiles + ' aborted!')
+            reader.onerror = () => console.log('File reading of ' + acceptedFiles + ' failed!')
+            reader.onload = () => {
+                const binaryStr = reader.result
+                const graphObject = parseBIFToGraph(binaryStr);
+                props.callback(graphObject)
+            };
 
-        acceptedFiles.forEach(file => reader.readAsBinaryString(file))
+            acceptedFiles.forEach(file => reader.readAsBinaryString(file))
+        } catch(err) {
+            setError("Error parsing file:" + err.message)
+        }
     }, [props]);
 
     /**
      * Using one of the default example files (asia, alarm, etc.)
      */
     const useDefaultFile = fileContent => {
-        const graphObject = parseBIFToGraph(fileContent);
-        props.callback(graphObject);
+        try {
+            const graphObject = parseBIFToGraph(fileContent);
+            props.callback(graphObject);
+        } catch (err) {
+            setError("Error parsing file: " + err.message)
+        }
     }
     
     /** Configuration props for the dropZone component */
@@ -63,6 +69,7 @@ const FileUploader = props => {
                     { status === 'ready' && (isDragActive ? "Drop it!" : "Drag to upload your BIF-file")}
                     { spinner }
                 </div>
+                { error && <p className="upload-error-label"> {error} </p>}
             </div>
             <DefaultFileSelect callback={useDefaultFile}/>
         </div>
