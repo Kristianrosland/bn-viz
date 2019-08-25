@@ -12,6 +12,11 @@ import './App.css';
 
 const dagStratify = d3dag.dagStratify();
 
+/**
+ * The main component of the application
+ * - This component keeps track of the graph data structure, and renders the <Graph /> component
+ * - If there is no graph data available, this component renders the <FileUploader /> component
+ */
 function App() {
   const [ width, setWidth ] = useState(20)
   const [ clickedNode, setClickedNode ] = useState(undefined);
@@ -25,6 +30,7 @@ function App() {
   const [ closeHovered, setCloseHovered ] = useState(false);
   const [ activeTrailsInformation, setActiveTrailsInformation ] = useState(undefined);
 
+  /** Calculates all active trails from q=[from, to] given the evidence set e */
   const calculateActivetrails = (q, e) => {
     const allTrails = findActiveTrails(graph.nodeData, graph.arcs, q[0], q[1], e).flat().map(({source, target})=>`${source}-${target}`)
     const arcColors = {}
@@ -34,6 +40,7 @@ function App() {
     setActiveTrailsInformation({ ...activeTrailsInformation, queryNodes: q, evidenceNodes: e, arcColors: arcColors })
   }
 
+  /** When the user clicks a node, we must (potentially) update active trails */
   const handleNodeClick = (nodes, id, cpds) => {
     if (activeTrailsInformation) {
       const { queryNodes, evidenceNodes } = activeTrailsInformation;
@@ -78,6 +85,10 @@ function App() {
     });
   }
 
+  /** 
+   * If user enables the active trails: Generate all active trails information
+   * If user disables the active trails: Clean up and remove trails
+   */
   const handleActiveTrailsCheckboxClick = () => {
     if (!activeTrailsMode) {
       closeSlideIn();
@@ -90,6 +101,9 @@ function App() {
     setActiveTrailsMode(!activeTrailsMode)
   }
 
+  /**
+   * When user clicks trash icon, reset all data
+   */
   const trash = () => {
     closeSlideIn();
     setClickedNode(undefined)
@@ -102,6 +116,10 @@ function App() {
     setTrashHovered(false)
   }
 
+  /**
+   * Callback passed to the <FileUpload /> component. Gets a graph data object as input, 
+   * and sets all the necessary variables for the <Graph /> component to render the SVG.
+   */
   const uploadCallback = data => {
     const { network, nodes } = data;
     if (network && network.name) {
@@ -134,6 +152,8 @@ function App() {
     }
   }
 
+
+  /** The two checkboxes on the left panel */
   const arcStrengthClasses = makeStyles({
     colorSecondary: {
       color: hasAllArcStrengths ? 'white !important' : 'gray !important'
@@ -151,9 +171,11 @@ function App() {
 
   return (
     <>
+    { /** Render an error if the screen is < 1000px wide (App not useable)  **/}
     <div className="only-mobile too-small">
       Your screen is too small for this application
     </div>
+    { /** Render the application HTML and sub-components */}
     <div className="App hidden-mobile">
       <div className="left-pane" style={{ width: `${width}%`, transition: 'all 0.3s' }}>
         <div className="upper-left-pane">

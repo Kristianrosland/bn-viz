@@ -53,8 +53,10 @@ const parseArcStrength = tokens => {
     return { rest: tokens, from, to, strength }
 }
 
-
-
+/**
+ * Parses a list from @tokens delimited by @delimiter
+ * Expects the list to end with @end
+ */
 const parseListOfValues = (tokens, delimiter, end) => {
     const values = []
     while (tokens[0] !== end) {
@@ -205,6 +207,12 @@ const parseCPDBlock = (tokens, result) => {
     return tokens
 }
 
+
+/**
+ *  This method is a parser for the Bayesian Interchange Format (BIF).
+ *  It first splits the content into tokens, and parses according to a set of rules.
+ *  If it finds an unexpected token, it will throw a parse error.
+ */
 export const parseBIFToGraph = bifString => {
     let tokens = tokenize(removeWhitespaceAndComments(bifString))
     const resultObject = { network: {}, nodes: {}, cpds: {}, arcs: [], arcStrengths: [] }

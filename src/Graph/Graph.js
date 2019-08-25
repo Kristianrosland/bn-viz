@@ -4,9 +4,13 @@ import * as d3 from 'd3';
 class Graph extends Component {
 
     componentDidMount() {
-        this.renderGraph();
+        this.renderGraph(); // Required for the first render on mounting
     }
     
+    /** 
+     * Take a variable name and turn it into an uppercase string of max 4 characters 
+     * E.g. MINVOL => MINV
+    */
     idToText(id) {
         return isNaN(id) ? id.toUpperCase().substring(0,4) : id;
     }
@@ -17,6 +21,7 @@ class Graph extends Component {
         const dy = 100
         const radius =  25;
 
+        /** Remove the SVG from canvas to avoid duplicates */
         d3.select('.main-svg').remove()
 
         /* CANVAS */
@@ -118,6 +123,9 @@ class Graph extends Component {
             
     }
 
+    /**
+     * This method renders the graph SVG. If supplied with activeTrailsInformation it will also render the active trails!
+     */
     render() {
         const { activeTrailsInformation } = this.props;
         this.renderGraph(this.props);
